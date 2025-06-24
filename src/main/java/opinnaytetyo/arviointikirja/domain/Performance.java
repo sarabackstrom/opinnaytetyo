@@ -1,7 +1,5 @@
 package opinnaytetyo.arviointikirja.domain;
 
-import org.hibernate.annotations.Check;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,8 +12,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-// saattaa olla väärin
-//@Check(constraints = "skills >= 4 AND skills <=10")
 public class Performance {
 
     @Id
@@ -29,24 +25,24 @@ public class Performance {
     private int skills;
 
     @Column(name = "tyoskentely")
-    @Min(4)
+   @Min(4)
     @Max(10)
     private int effort;
 
     @Column(name = "kuvaus")
     private String shortDescription;
 
-    @Column(name = "poissaolo", nullable = false)
-    private boolean absence = false;
+    @Column(name = "poissaolo")
+    private boolean absence;
 
-    @Column(name = "ei_varusteita", nullable = false)
-    private boolean sportsEquipment = false;
+    @Column(name = "ei_varusteita")
+    private boolean sportsEquipment;
 
-    @Column(name = "ei_osallistu", nullable = false)
-    private boolean participation = false;
+    @Column(name = "ei_osallistu")
+    private boolean participation;
 
-    @Column(name = "loukkaantunut", nullable = false)
-    private boolean injured = false;
+    @Column(name = "loukkaantunut")
+    private boolean injured;
 
     @ManyToOne (optional = false)
     @JoinColumn(name = "studentId", nullable = false)
@@ -77,6 +73,11 @@ public class Performance {
         this.user = user;
         this.lesson = lesson;
     }
+
+    // lisätty jälkikäteen
+    public Performance(int skills, int effort, String shortDescription, Student student, User user, Lesson lesson) {
+    this(skills, effort, shortDescription, false, false, false, false, student, user, lesson);
+}
 
     public Long getId() {
         return id;

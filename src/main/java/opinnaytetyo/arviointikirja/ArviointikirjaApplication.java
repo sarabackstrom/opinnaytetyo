@@ -26,18 +26,11 @@ import opinnaytetyo.arviointikirja.domain.Teacher;
 import opinnaytetyo.arviointikirja.domain.TeachingGroup;
 import opinnaytetyo.arviointikirja.domain.TeachingGroupRepository;
 import opinnaytetyo.arviointikirja.domain.UserRepository;
-import opinnaytetyo.arviointikirja.domain.EducationalGoal.Category;
 
 @SpringBootApplication
 public class ArviointikirjaApplication {
 
-    private final UserRepository userRepository;
-
 	private static final Logger log = LoggerFactory.getLogger(ArviointikirjaApplication.class);
-
-    ArviointikirjaApplication(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
 	public static void main(String[] args) {
 		SpringApplication.run(ArviointikirjaApplication.class, args);
@@ -75,7 +68,7 @@ public class ArviointikirjaApplication {
 				lRepository.save(lesson1);
 			}
 
-			EducationalGoal educationalGoal1 = new EducationalGoal("Fyysinen aktiivisuus ja yrittäminen", Category.effort);
+			EducationalGoal educationalGoal1 = new EducationalGoal("Fyysinen aktiivisuus ja yrittäminen", "effort");
 			if(eGoalRepository.count()== 0){
 				eGoalRepository.save(educationalGoal1);
 			}

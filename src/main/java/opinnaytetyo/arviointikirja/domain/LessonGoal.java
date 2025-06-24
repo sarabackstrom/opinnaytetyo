@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class LessonGoal {
@@ -17,11 +17,11 @@ public class LessonGoal {
     private Long id;
 
     @ManyToOne (optional = false)
-    @NotEmpty(message = "Oppitunti ei voi olla tyhjä.")
+    @NotNull
     private Lesson lesson;
 
     @ManyToOne (optional = false)
-    @NotEmpty(message = "Opetussuunnitelman tavoite ei voi olla tyhjä.")
+    @NotNull
     private EducationalGoal educationalGoal;
 
     public LessonGoal(){}

@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -24,8 +23,8 @@ public class Lesson {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name="paivämaara", nullable = false)
-    @NotEmpty(message = "Oppitunnilla pitää olla päivämäärä")
+    @Column(name="paivamaara", nullable = false)
+    //@NotEmpty(message = "Oppitunnilla pitää olla päivämäärä")
     private LocalDate lessonDay;
 
     @Column(name="kuvaus")

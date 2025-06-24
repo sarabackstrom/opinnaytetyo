@@ -6,14 +6,11 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
-//enum
 @Entity
 public class EducationalGoal {
 
@@ -25,20 +22,15 @@ public class EducationalGoal {
     @Column(name = "nimi", nullable = false, unique = true)
     private String name;
 
-    //tarkistukset??
-    public enum Category {
-        skills, effort
-    }
-    @Enumerated(EnumType.STRING)
     @Column(name= "kategoria", nullable = false)
-    private Category category;
+    private String category;
 
     @OneToMany (mappedBy = "educationalGoal", cascade = CascadeType.ALL)
     private List<LessonGoal>lessonGoals = new ArrayList<>();
 
     public EducationalGoal(){}
 
-    public EducationalGoal(String name, Category category) {
+    public EducationalGoal(String name, String category) {
         this.name = name;
         this.category = category;
     }
@@ -59,11 +51,11 @@ public class EducationalGoal {
         this.name = name;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
