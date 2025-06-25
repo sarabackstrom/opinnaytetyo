@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <title>Oppitunnit</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+</head>
+
+<body>
+    <h1>Oppituntien päiväkirja</h1>
+    <div sec:authorize="isAuthenticated()">
+    <form th:action="@{/logout}" method="post" class="nav-link p-0">
+        <input type="submit" value="Kirjaudu ulos" class="btn btn-link text-black" />
+    </form></div>
+    <table class="table table-hover">
+        <tr>
+            <th>Päivämäärä</th>
+            <th>Luokka</th>
+            <th>Laji</th>
+            <th>Mitä tehtiin</th>
+            <th>Muokkaa</th>
+            <th>Poista</th>
+            <th>Lisää merkinnät</th>
+        </tr>
+        <tr th:each="l : ${lessons}">
+            <td th:text="${l.lessonDay}"></td>
+            <td th:text="${l.teachingGroup.className}"></td>
+            <td th:text="${l.sport.name}"></td>
+            <td th:text="${l.lessonDescription}"></td>
+            <td><a th:href="@{/editlessonform/{id}(id=${l.id})}"><i class="fas fa-pencil-alt"></i></a></td>
+            <td><a th:href="@{/deletelesson/{id}(id=${l.id})}">Delete</a></td>
+            <!--  // Jos oppitunti poisteaan suoritukset katoaa-->
+            <td>
+                <span th:if="${performanceCountByLesson[l.id] > 0}">
+                    <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}">Muokkaa</a>
+                </span>
+                <span th:if="${performanceCountByLesson[l.id] == 0}">
+                    <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}">Lisää</a>
+                </span>
+            </td>
+        </tr>
+    </table>
+    <a href="/lessonform" class="btn btn-success">Lisää oppitunti</a>
+
+</body>
+
+</html>

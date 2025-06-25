@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Muokkaa oppituntia</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <h1>Muokkaa oppituntia</h1>
+
+
+    <div class="form-group">
+        <form th:object="${lesson}" th:action="@{/updatelesson}" action="#" method="post">
+            <input type="hidden" th:field="*{id}" class="form-control" />
+            <p>Päivämäärä: <span th:text="${lesson.lessonDay}"></span></p>
+            <input type="hidden" th:field="*{lessonDay}" />
+
+            <!--- Valitse luokka -->
+            <div class="form-group">
+                <label for="classlist">Opetusryhmä</label>
+                <select id="classlist" th:field="*{teachingGroup}" class="form-control">
+                    <option th:each="tgroup: ${teachingroups}" th:value="${tgroup.id}" th:text="${tgroup.className}">
+                    </option>
+                </select>
+
+            </div>
+            <!--- Valitse laji -->
+            <div class="form-group">
+                <label for="sport">Laji</label>
+                <select id="sport" th:field="*{sport}" class="form-control">
+                    <option th:each="s: ${sports}" th:value="${s.id}" th:text="${s.name}"></option>
+                </select>
+            </div>
+
+            <!--- Kirjoita kuvaus -->
+            <div class="form-group">
+                <label for="descrip">Mitä tehtiin</label>
+                <textarea class="form-control" id="descrip" th:field="*{lessonDescription}" rows="4"></textarea>
+            </div>
+
+            <!--- Valitse tavoitteet -->
+            <div class="form-group">
+                <label>Tavoitteet</label>
+                <div th:each="goal : ${goals}" class="form-check">
+                    <input class="form-check-input" type="checkbox" name="selectedGoals" th:value="${goal.id}"
+                        th:id="'goal_' + ${goal.id}" th:checked="${selectedGoals.contains(goal.id)}" />
+                    <!-- esivalinta -->
+                    <label class="form-check-label" th:for="'goal_' + ${goal.id}" th:text="${goal.name}"></label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tallenna</input>
+
+        </form>
+    </div>
+</body>
+
+</html>

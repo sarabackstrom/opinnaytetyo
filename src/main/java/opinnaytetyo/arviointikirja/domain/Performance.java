@@ -74,10 +74,10 @@ public class Performance {
         this.lesson = lesson;
     }
 
-    // lisätty jälkikäteen
+    /*  lisätty jälkikäteen, voiko poistaa?
     public Performance(int skills, int effort, String shortDescription, Student student, User user, Lesson lesson) {
     this(skills, effort, shortDescription, false, false, false, false, student, user, lesson);
-}
+}*/
 
     public Long getId() {
         return id;

@@ -114,7 +114,7 @@ public class TeachingGroup {
     @Override
     public String toString() {
         return "TeachingGroup [id=" + id + ", startYear=" + startYear + ", classCode=" + classCode + ", className="
-                + className + ", teacher=" + teacher + "]";
+                + className + "]";
     }
 
 }

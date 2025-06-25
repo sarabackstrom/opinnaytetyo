@@ -29,9 +29,9 @@ public void setTeachingGroups(List<TeachingGroup> teachingGroups) {
     this.teachingGroups = teachingGroups;
 }
 
-@Override
+/* @Override
 public String toString() {
     return "Teacher [teachingGroups=" + teachingGroups + "]";
-}
+}*/
 
 }

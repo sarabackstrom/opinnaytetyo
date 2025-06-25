@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head>
+        <title>Kirjautumissivu</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+     <div class="col-md-4 col-md-offset-4">
+        <div class="alert alert-danger" th:if="${param.error}">
+            Väärä käyttäjätunnus ja/tai salasana.
+        </div>
+        <div class="alert alert-warning" th:if="${param.logout}">
+            Uloskirjautuminen onnistui.
+        </div>
+        <form th:action="@{/login}" method="post">
+            <div><label> Käyttäjätunnus : <input type="text" name="username" class="form-control"/> </label></div>
+            <div><label> Salasana: <input type="password" name="password" class="form-control"/> </label></div>
+            <div><input type="submit" value="Sign In" class="btn btn-primary"/></div>
+        </form>
+
+       </div>
+    </body>
+</html>

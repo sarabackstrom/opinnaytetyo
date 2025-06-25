@@ -105,6 +105,13 @@ public class User {
     this.performances = performances;
    }
 
+   public String getRole() {
+    if (this instanceof Admin) return "ADMIN";
+    else if (this instanceof Teacher) return "TEACHER";
+    else if (this instanceof Student) return "STUDENT";
+    else return "USER"; // oletusrooli
+}
+
    @Override
    public String toString() {
     return "User [id=" + id + ", username=" + username + ", firstName=" + firstName
