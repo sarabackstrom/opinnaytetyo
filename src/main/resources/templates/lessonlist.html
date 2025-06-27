@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<!--<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">-->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <title>Oppitunnit</title>
@@ -12,10 +13,16 @@
 
 <body>
     <h1>Oppituntien päiväkirja</h1>
+    <p sec:authorize="hasRole('TEACHER')">Näkyy TEACHER-roolille</p>
+<p sec:authorize="hasRole('STUDENT')">Näkyy STUDENT-roolille</p>
+<p sec:authorize="isAuthenticated()">Näkyy kirjautuneille</p>
+<p sec:authorize="hasAuthority('ROLE_TEACHER')">Näkyy TEACHER-roolille</p>
+<p sec:authorize="hasAuthority('ROLE_STUDENT')">Näkyy STUDENT-roolille</p>
     <div sec:authorize="isAuthenticated()">
-    <form th:action="@{/logout}" method="post" class="nav-link p-0">
-        <input type="submit" value="Kirjaudu ulos" class="btn btn-link text-black" />
-    </form></div>
+        <form th:action="@{/logout}" method="post" class="nav-link p-0">
+            <input type="submit" value="Kirjaudu ulos" class="btn btn-link text-black" />
+        </form>
+    </div>
     <table class="table table-hover">
         <tr>
             <th>Päivämäärä</th>
@@ -24,7 +31,8 @@
             <th>Mitä tehtiin</th>
             <th>Muokkaa</th>
             <th>Poista</th>
-            <th>Lisää merkinnät</th>
+            <th sec:authorize="hasRole('TEACHER')">Opettaja lisää merkinnät</th>
+            <th sec:authorize="hasRole('STUDENT')">Oppilaan lomake</th>
         </tr>
         <tr th:each="l : ${lessons}">
             <td th:text="${l.lessonDay}"></td>
@@ -34,7 +42,7 @@
             <td><a th:href="@{/editlessonform/{id}(id=${l.id})}"><i class="fas fa-pencil-alt"></i></a></td>
             <td><a th:href="@{/deletelesson/{id}(id=${l.id})}">Delete</a></td>
             <!--  // Jos oppitunti poisteaan suoritukset katoaa-->
-            <td>
+            <th sec:authorize="hasRole('TEACHER')">
                 <span th:if="${performanceCountByLesson[l.id] > 0}">
                     <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}">Muokkaa</a>
                 </span>
@@ -42,6 +50,15 @@
                     <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}">Lisää</a>
                 </span>
             </td>
+            <th sec:authorize="hasRole('STUDENT')">
+                <span th:if="${performanceCountByLesson[l.id] > 0}">
+                    <a th:href="@{/studentaddsperformance/{id}(id=${l.id})}">Muokkaa</a>
+                </span>
+                <span th:if="${performanceCountByLesson[l.id] == 0}">
+                    <a th:href="@{/studentaddsperformance/{id}(id=${l.id})}">Lisää</a>
+                </span>
+            </td>
+
         </tr>
     </table>
     <a href="/lessonform" class="btn btn-success">Lisää oppitunti</a>

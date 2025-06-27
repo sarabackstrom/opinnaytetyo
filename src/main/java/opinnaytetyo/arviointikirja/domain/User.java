@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 //tietokantaan ja sovelluslogiikkaan tarkistukset @Column sekä @NotEmpty (nolla-arvot), uniikit arvot, @column nimen määrittelyt tietokantaan https://medium.com/@erayaraz10/understanding-discriminatorcolumn-in-spring-jpa-ae61bbc6ca68
 @Entity
-@Table(name="Kayttajat")
+@Table(name = "Kayttajat")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "rooli", discriminatorType = DiscriminatorType.STRING)
 public class User {
@@ -45,77 +45,78 @@ public class User {
     @NotEmpty(message = "Sukunimi ei voi olla tyhjä.")
     private String lastName;
 
-   @OneToMany (mappedBy = "user", cascade = CascadeType.ALL)
-   private List<Performance> performances = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Performance> performances = new ArrayList<>();
 
-   public User(){}
+    @Column(name = "rooli", insertable = false, updatable = false)
+    private String role;
 
-   public User(String username, String passwordHash, String firstName, String lastName) {
-    this.username = username;
-    this.passwordHash = passwordHash;
-    this.firstName = firstName;
-    this.lastName = lastName;
-   }
+    public String getRole() {
+        return role;
+    }
 
-   public Long getId() {
-    return id;
-   }
+    public User() {
+    }
 
-   public void setId(Long id) {
-    this.id = id;
-   }
+    public User(String username, String passwordHash, String firstName, String lastName) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-   public String getUsername() {
-    return username;
-   }
+    public Long getId() {
+        return id;
+    }
 
-   public void setUsername(String username) {
-    this.username = username;
-   }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-   public String getPasswordHash() {
-    return passwordHash;
-   }
+    public String getUsername() {
+        return username;
+    }
 
-   public void setPasswordHash(String passwordHash) {
-    this.passwordHash = passwordHash;
-   }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-   public String getFirstName() {
-    return firstName;
-   }
+    public String getPasswordHash() {
+        return passwordHash;
+    }
 
-   public void setFirstName(String firstName) {
-    this.firstName = firstName;
-   }
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
 
-   public String getLastName() {
-    return lastName;
-   }
+    public String getFirstName() {
+        return firstName;
+    }
 
-   public void setLastName(String lastName) {
-    this.lastName = lastName;
-   }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-   public List<Performance> getPerformances() {
-    return performances;
-   }
+    public String getLastName() {
+        return lastName;
+    }
 
-   public void setPerformances(List<Performance> performances) {
-    this.performances = performances;
-   }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-   public String getRole() {
-    if (this instanceof Admin) return "ADMIN";
-    else if (this instanceof Teacher) return "TEACHER";
-    else if (this instanceof Student) return "STUDENT";
-    else return "USER"; // oletusrooli
-}
+    public List<Performance> getPerformances() {
+        return performances;
+    }
 
-   @Override
-   public String toString() {
-    return "User [id=" + id + ", username=" + username + ", firstName=" + firstName
-            + ", lastName=" + lastName + "]";
-   }
+    public void setPerformances(List<Performance> performances) {
+        this.performances = performances;
+    }
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", username=" + username + ", firstName=" + firstName
+                + ", lastName=" + lastName + "]";
+    }
 
 }

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <title>Opetusryhmät</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+</head>
+
+<body>
+    <h1>Opettajan opetusryhmät</h1>
+    <div sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post" class="nav-link p-0">
+            <input type="submit" value="Kirjaudu ulos" class="btn btn-link text-black" />
+        </form>
+    </div>
+
+    <p>Opettajan arvioinnit</p>
+    <p>Arvioituja oppitunteja: <span th:text="${lessonsT}"></span></p>
+
+    <table class="table table-hover">
+        <tr>
+            <th>KA työskentely</th>
+            <th>KA osaaminen</th>
+            <th>KA 50% työskentely ja 50% osaaminen</th>
+            <th>poissaolot</th>
+            <th>ei varusteita</th>
+            <th>ei osallistu</th>
+            <th>loukkaantuneena</th>
+        </tr>
+        <tr>
+            <td th:text="${#numbers.formatDecimal(averageEffortT, 1, 2)}"></td>
+            <td th:text="${#numbers.formatDecimal(averageSkillsT, 1, 2)}"></td>
+            <td th:text="${#numbers.formatDecimal(averageEffortAndSkillsT, 1, 2)}"></td>
+            <td th:text="${absenceCount}"></td>
+            <td th:text="${noEquipmentCount}"></td>
+            <td th:text="${noParticipationCount}"></td>
+            <td th:text="${injuredCount}"></td>
+        </tr>
+    </table>
+
+    <p>Oppilaan arvioinnit</p>
+    <p>Arvioituja oppitunteja: <span th:text="${lessonsS}"></span></p>
+    <table class="table table-hover">
+    <tr>
+        <th>KA työskentely</th>
+        <th>KA osaaminen</th>
+        <th>KA 50% työskentely ja 50% osaaminen</th>
+    </tr>
+    <tr>
+        <td th:text="${#numbers.formatDecimal(averageEffortS, 1, 2)}"></td>
+        <td th:text="${#numbers.formatDecimal(averageSkillsS, 1, 2)}"></td>
+        <td th:text="${#numbers.formatDecimal(averageEffortAndSkillsS, 1, 2)}"></td>
+    </tr>
+</table>
+
+<h3>Tavoitekohtaiset keskiarvot (ope & oppilas)</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tavoite</th>
+            <th>Kategoria</th>
+            <th>Opettajan arvio</th>
+            <th>Oppilaan itsearvio</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="row : ${combinedGoalAverages}">
+            <td th:text="${row.goalName}"></td>
+            <td th:text="${row.category}"></td>
+            <td th:text="${#numbers.formatDecimal(row.teacherAverage, 1, 1)}"></td>
+            <td th:text="${#numbers.formatDecimal(row.studentAverage, 1, 1)}"></td>
+        </tr>
+    </tbody>
+</table>
+
+
+</body>
+
+</html>

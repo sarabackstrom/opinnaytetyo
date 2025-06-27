@@ -1,12 +1,14 @@
 package opinnaytetyo.arviointikirja.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import opinnaytetyo.arviointikirja.domain.LessonRepository;
 import opinnaytetyo.arviointikirja.domain.PerformanceRepository;
@@ -50,4 +52,15 @@ public class UserController {
         return "teachinggroups";
     }
 
-}
+    @GetMapping("/studentlist/{id}")
+    public String showStudentsByTeachingGroup (@PathVariable("id") Long id, Model model){
+    Optional<TeachingGroup> tGrouOptional = tGroupRepository.findById(id);
+    if(tGrouOptional.isPresent()){
+        TeachingGroup teachinggroup = tGrouOptional.get();
+        List<Student>students = stRepository.findByTeachingGroup(teachinggroup);
+        model.addAttribute("students", students);
+        return "studentlist";
+    } else {
+        return "redirect:teachinggroups";
+    }
+}}

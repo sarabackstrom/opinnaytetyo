@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Lisää suoritukset</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <h1>Lisää suoritus</h1>
+    <div class="form-group">
+        <form th:object="${performance}" th:action="@{/saveStudentPerformance}" action="#" method="post">
+
+            <input type="hidden" th:field="*{student.id}" />
+            <input type="hidden" th:field="*{lesson.id}" />
+            <input type="hidden" th:field="*{user.id}" />
+
+            <div class="form-group">
+                <label for="effort">Työskentely:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="effort4" th:field="*{effort}" value="4">
+                    <label class="form-check-label" for="effort4">4</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="effort5" th:field="*{effort}" value="5">
+                    <label class="form-check-label" for="effort5">5</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="effort6" th:field="*{effort}" value="6">
+                    <label class="form-check-label" for="effort6">6</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="effort7" th:field="*{effort}" value="7">
+                    <label class="form-check-label" for="effort7">7</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="effort8" th:field="*{effort}" value="8">
+                    <label class="form-check-label" for="effort8">8</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="effort9" th:field="*{effort}" value="9">
+                    <label class="form-check-label" for="effort9">9</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="effort10" th:field="*{effort}" value="10">
+                    <label class="form-check-label" for="effort10">10</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="skills">Taidot:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="skills4" th:field="*{skills}" value="4">
+                    <label class="form-check-label" for="skills4">4</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="skills5" th:field="*{skills}" value="5">
+                    <label class="form-check-label" for="skills5">5</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="skills6" th:field="*{skills}" value="6">
+                    <label class="form-check-label" for="skills6">6</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="skills7" th:field="*{skills}" value="7">
+                    <label class="form-check-label" for="skills7">7</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="skills8" th:field="*{skills}" value="8">
+                    <label class="form-check-label" for="skills8">8</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="skills9" th:field="*{skills}" value="9">
+                    <label class="form-check-label" for="skills9">9</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="skills10" th:field="*{skills}" value="10">
+                    <label class="form-check-label" for="skills10">10</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="shortDescription">Kommentit</label>
+                <input type="text" id="shortDescription" th:field="*{shortDescription}" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="absence">En ollut tunnilla</label>
+                <input type="checkbox" id="absence" th:field="*{absence}" />
+            </div>
+
+            <div class="form-group">
+                <label for="injured">Olin loukkaantuneena tai kipeänä</label>
+                <input type="checkbox" id="injured" th:field="*{injured}" />
+            </div>
+
+            <div class="form-group">
+                <label for="participation">En osallistunut</label>
+                <input type="checkbox" id="participation" th:field="*{participation}" />
+            </div>
+
+            <div class="form-group">
+                <label for="sportsEquipment">Liikuntavarusteet puuttui</label>
+                <input type="checkbox" id="sportsEquipment" th:field="*{sportsEquipment}" />
+            </div>
+
+            <button type="submit" id="submitButton" class="btn btn-primary">Tallenna</button>
+    </div>
+
+    </form>
+    </div>
+
+</body>
+
+</html>
