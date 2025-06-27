@@ -42,8 +42,14 @@ public class ArviointikirjaApplication {
 			log.info("Save a couple of EducationalGoals, Lessons, LessonGoals, Performances, Sports, Students, Teachers, TeachingGroups");
 
 			Sport sport1 = new Sport("koripallo");
+			Sport sport2 = new Sport("pesäpallo");
+			Sport sport3 = new Sport("lentopallo");
+			Sport sport4 = new Sport("jalkapallo");
 			if(sRepository.count()==0){
 				sRepository.save(sport1);
+				sRepository.save(sport2);
+				sRepository.save(sport3);
+				sRepository.save(sport4);
 			}
 
 			Teacher teacher1 = new Teacher("teacher1", "$2a$10$zA8JiOPsP5cEcd/5gNF3Fu8fX4LcHtMkooyDHCgbJAzUs/a26W1TG", "Sara", "Bäckström");

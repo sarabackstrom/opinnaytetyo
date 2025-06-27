@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,7 +29,6 @@ public class PerformanceController {
     private final LessonController lessonController;
 
     private final EducationalGoalRepository educationalGoalRepository;
-
 
     private final ArviointikirjaApplication arviointikirjaApplication;
 
@@ -54,6 +54,7 @@ public class PerformanceController {
         this.lessonController = lessonController;
     }
 
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     @GetMapping("/teacherperformanceform/{id}")
     public String showPerformanceForm(@PathVariable("id") Long id, Model model) {
         Optional<Lesson> lesson = lRepository.findById(id);
@@ -96,6 +97,7 @@ public class PerformanceController {
         return "teacherperformanceform";
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     @GetMapping("/studentaddsperformance/{id}")
     public String ShowStudentAddsPerformanceForm(@PathVariable("id") Long id, Model model) {
         Optional<Lesson> lesson = lRepository.findById(id);
@@ -132,6 +134,7 @@ public class PerformanceController {
         return "studentaddsperformance";
     }
 
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     @PostMapping("/saveperformances")
     public String savePerformances(@ModelAttribute PerformancesDto form) {
         // Selvitetään kirjautunut käyttäjä
@@ -169,8 +172,9 @@ public class PerformanceController {
         return "redirect:/lessonlist";
     }
 
+    @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     @PostMapping("/saveStudentPerformance")
-    public String savePerformance( @ModelAttribute Performance performance) {
+    public String savePerformance(@ModelAttribute Performance performance) {
 
         // Selvitetään kirjautunut käyttäjä
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -179,36 +183,47 @@ public class PerformanceController {
 
         performance.setUser(currentUser);
 
-         Optional<Performance> existing = pRepository.findByStudentAndLessonAndUser(
-                    performance.getStudent(), performance.getLesson(), currentUser);
+        Optional<Performance> existing = pRepository.findByStudentAndLessonAndUser(
+                performance.getStudent(), performance.getLesson(), currentUser);
 
-            if (existing.isPresent()) {
-                // Päivitetään olemassa oleva suoritus
-                Performance existingPerf = existing.get();
-                existingPerf.setEffort(performance.getEffort());
-                existingPerf.setSkills(performance.getSkills());
-                existingPerf.setShortDescription(performance.getShortDescription());
-                existingPerf.setAbsence(performance.isAbsence());
-                existingPerf.setSportsEquipment(performance.isSportsEquipment());
-                existingPerf.setParticipation(performance.isParticipation());
-                existingPerf.setInjured(performance.isInjured());
+        if (existing.isPresent()) {
+            // Päivitetään olemassa oleva suoritus
+            Performance existingPerf = existing.get();
+            existingPerf.setEffort(performance.getEffort());
+            existingPerf.setSkills(performance.getSkills());
+            existingPerf.setShortDescription(performance.getShortDescription());
+            existingPerf.setAbsence(performance.isAbsence());
+            existingPerf.setSportsEquipment(performance.isSportsEquipment());
+            existingPerf.setParticipation(performance.isParticipation());
+            existingPerf.setInjured(performance.isInjured());
 
-                pRepository.save(existingPerf);
-            } else {
-                // Uusi suoritus
-                pRepository.save(performance);
-            }
-            return "redirect:/lessonlist";
+            pRepository.save(existingPerf);
+        } else {
+            // Uusi suoritus
+            pRepository.save(performance);
         }
+        return "redirect:/lessonlist";
+    }
 
+    /*@PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
     @PostMapping("/studentsaveperformance")
     public String saveStudentPerformance(@ModelAttribute Performance performance) {
         pRepository.save(performance);
         return "redirect:/lessonlist";
+    }*/
+
+    @PreAuthorize("hasRole('STUDENT')")
+    @GetMapping("/myperformances")
+    public String redirectToOwnPerformances() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        User user = uRepository.findByUsername(username);
+
+        return "redirect:/showperformances/" + user.getId();
     }
 
     @GetMapping("/showperformances/{id}")
-    public String showTeacherStudentsPerformances(@PathVariable("id") Long id, Model model) {
+    public String showStudentsPerformances(@PathVariable("id") Long id, Model model) {
 
         // Käyttäjän tunnistaminen
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -296,6 +311,9 @@ public class PerformanceController {
             model.addAttribute("noEquipmentCount", noEquipmentCount);
             model.addAttribute("lessonsT", lessonsT);
             model.addAttribute("lessonsS", lessonsS);
+            model.addAttribute("student", student);
+            model.addAttribute("allPerformances", allPerformances);
+            model.addAttribute("studentAddedPerformances", studentAddedPerformances);
 
             // opetussuunnitelman tavoitteet -tekoäly
             List<Lesson> studentLessons = teacherAddedPerformances.stream()

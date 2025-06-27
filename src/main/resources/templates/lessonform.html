@@ -9,6 +9,37 @@
 </head>
 
 <body>
+
+    <!-- Navigaatiopalkki alkaa -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Arviointikirja</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <!-- Linkit navigointipalkkiin -->
+                <li class="nav-item">
+                    <a class="nav-link" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/teachinggroups"
+                        sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat suoritukset</a>
+                </li>
+                <li class="nav-item">
+                    <form th:action="@{/logout}" method="post" class="nav-link p-0">
+                        <input type="submit" value="Kirjaudu ulos" class="btn btn-link text-white" />
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Navigaatiopalkki loppuu-->
+
     <h1>Lisää oppitunti</h1>
 
     <!--- Valitse päivämäärä -->
@@ -51,10 +82,12 @@
                         name="selectedGoals" />
                     <label class="form-check-label" th:for="'goal_' + ${goal.id}" th:text="${goal.name}"></label>
                 </div>
-            </div> 
-            
+            </div>
 
-            <button type="submit" class="btn btn-primary">Tallenna</input>
+
+            <button type="submit" class="btn btn-primary">Tallenna</button>
+                <button type="button" onclick="window.location.href='/lessonlist'" class="btn btn-secondary"
+                    style="margin-left: 20px;">Peruuta (tietoja ei tallenneta)</button>
 
         </form>
     </div>

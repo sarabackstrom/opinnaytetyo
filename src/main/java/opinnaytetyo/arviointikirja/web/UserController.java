@@ -3,6 +3,7 @@ package opinnaytetyo.arviointikirja.web;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,21 +23,17 @@ import opinnaytetyo.arviointikirja.domain.UserRepository;
 @Controller
 public class UserController {
 
-    private final LessonRepository lRepository;
-    private final PerformanceRepository pRepository;
     private final StudentRepository stRepository;
     private final TeachingGroupRepository tGroupRepository;
     private final UserRepository uRepository;
 
-    public UserController(LessonRepository lRepository, PerformanceRepository pRepository,
-            StudentRepository stRepository, TeachingGroupRepository tGroupRepository, UserRepository uRepository) {
-        this.lRepository = lRepository;
-        this.pRepository = pRepository;
+    public UserController(StudentRepository stRepository, TeachingGroupRepository tGroupRepository, UserRepository uRepository) {
         this.stRepository = stRepository;
         this.tGroupRepository = tGroupRepository;
         this.uRepository = uRepository;
     }
 
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     @GetMapping("/teachinggroups")
     public String teachingGroupsList(Model model) {
 
@@ -52,6 +49,7 @@ public class UserController {
         return "teachinggroups";
     }
 
+    @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     @GetMapping("/studentlist/{id}")
     public String showStudentsByTeachingGroup (@PathVariable("id") Long id, Model model){
     Optional<TeachingGroup> tGrouOptional = tGroupRepository.findById(id);

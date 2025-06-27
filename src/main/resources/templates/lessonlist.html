@@ -12,25 +12,48 @@
 </head>
 
 <body>
+
+<!-- Navigaatiopalkki alkaa -->
+ <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">Arviointikirja</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<!-- Linkit navigointipalkkiin -->
+				<li class="nav-item">
+					<a class="nav-link" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/teachinggroups" sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat suoritukset</a>
+				</li>
+				<li class="nav-item">
+					<form th:action="@{/logout}" method="post" class="nav-link p-0">
+						<input type="submit" value="Kirjaudu ulos" class="btn btn-link text-white"/>
+					</form>
+				</li>
+			</ul>
+		</div>
+ </nav>
+<!-- Navigaatiopalkki loppuu-->
+
     <h1>Oppituntien päiväkirja</h1>
-    <p sec:authorize="hasRole('TEACHER')">Näkyy TEACHER-roolille</p>
-<p sec:authorize="hasRole('STUDENT')">Näkyy STUDENT-roolille</p>
-<p sec:authorize="isAuthenticated()">Näkyy kirjautuneille</p>
-<p sec:authorize="hasAuthority('ROLE_TEACHER')">Näkyy TEACHER-roolille</p>
-<p sec:authorize="hasAuthority('ROLE_STUDENT')">Näkyy STUDENT-roolille</p>
-    <div sec:authorize="isAuthenticated()">
-        <form th:action="@{/logout}" method="post" class="nav-link p-0">
-            <input type="submit" value="Kirjaudu ulos" class="btn btn-link text-black" />
-        </form>
-    </div>
+    <p>Kirjautunut käyttäjä: <span th:text="${user.firstName + ' ' + user.lastName}"></span></p>
+    <p sec:authorize="hasRole('TEACHER')">Rooli: TEACHER</p>
+    <p sec:authorize="hasRole('STUDENT')">Rooli: STUDENT</p>
+    <p sec:authorize="hasRole('ADMIN')">Rooli: ADMIN</p>
     <table class="table table-hover">
         <tr>
             <th>Päivämäärä</th>
             <th>Luokka</th>
             <th>Laji</th>
             <th>Mitä tehtiin</th>
-            <th>Muokkaa</th>
-            <th>Poista</th>
+            <th sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Muokkaa</th>
+            <th sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Poista</th>
             <th sec:authorize="hasRole('TEACHER')">Opettaja lisää merkinnät</th>
             <th sec:authorize="hasRole('STUDENT')">Oppilaan lomake</th>
         </tr>
@@ -39,8 +62,8 @@
             <td th:text="${l.teachingGroup.className}"></td>
             <td th:text="${l.sport.name}"></td>
             <td th:text="${l.lessonDescription}"></td>
-            <td><a th:href="@{/editlessonform/{id}(id=${l.id})}"><i class="fas fa-pencil-alt"></i></a></td>
-            <td><a th:href="@{/deletelesson/{id}(id=${l.id})}">Delete</a></td>
+            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')"><a th:href="@{/editlessonform/{id}(id=${l.id})}"><i class="fas fa-pencil-alt"></i></a></td>
+            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')"><a th:href="@{/deletelesson/{id}(id=${l.id})}">Delete</a></td>
             <!--  // Jos oppitunti poisteaan suoritukset katoaa-->
             <th sec:authorize="hasRole('TEACHER')">
                 <span th:if="${performanceCountByLesson[l.id] > 0}">
@@ -61,7 +84,9 @@
 
         </tr>
     </table>
-    <a href="/lessonform" class="btn btn-success">Lisää oppitunti</a>
+    <div sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">
+    <a href="/lessonform" class="btn btn-success" >Lisää oppitunti</a>
+    </div>
 
 </body>
 
