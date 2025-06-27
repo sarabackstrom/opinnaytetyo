@@ -13,79 +13,87 @@
 
 <body>
 
-<!-- Navigaatiopalkki alkaa -->
- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Arviointikirja</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
-				<!-- Linkit navigointipalkkiin -->
-				<li class="nav-item">
-					<a class="nav-link" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/teachinggroups" sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat suoritukset</a>
-				</li>
-				<li class="nav-item">
-					<form th:action="@{/logout}" method="post" class="nav-link p-0">
-						<input type="submit" value="Kirjaudu ulos" class="btn btn-link text-white"/>
-					</form>
-				</li>
-			</ul>
-		</div>
- </nav>
-<!-- Navigaatiopalkki loppuu-->
+  <!-- Navigaatiopalkki alkaa -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #002F6C;">
+        <a class="navbar-brand" href="/lessonlist">Arviointikirja</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <!-- Linkit navigointipalkkiin -->
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/teachinggroups"
+                        sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat
+                        suoritukset</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#"
+                        onclick="document.getElementById('logoutForm').submit();">Kirjaudu ulos</a>
+                    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Navigaatiopalkki loppuu-->
 
-    <h1>Oppituntien päiväkirja</h1>
+<div class="container mt-4">
+
+    <h1 style="margin-bottom: 30px;">Oppituntien päiväkirja</h1>
+    <div style="margin-bottom: 30px;">
     <p>Kirjautunut käyttäjä: <span th:text="${user.firstName + ' ' + user.lastName}"></span></p>
     <p sec:authorize="hasRole('TEACHER')">Rooli: TEACHER</p>
     <p sec:authorize="hasRole('STUDENT')">Rooli: STUDENT</p>
     <p sec:authorize="hasRole('ADMIN')">Rooli: ADMIN</p>
+    </div>
     <table class="table table-hover">
-        <tr>
-            <th>Päivämäärä</th>
-            <th>Luokka</th>
-            <th>Laji</th>
-            <th>Mitä tehtiin</th>
-            <th sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Muokkaa</th>
-            <th sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Poista</th>
-            <th sec:authorize="hasRole('TEACHER')">Opettaja lisää merkinnät</th>
-            <th sec:authorize="hasRole('STUDENT')">Oppilaan lomake</th>
+        <tr style="background-color: #486B98; color: white;">
+            <td>Päivämäärä</td>
+            <td>Luokka</td>
+            <td>Laji</td>
+            <td>Mitä tehtiin</td>
+            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Muokkaa oppituntia</td> 
+            <td sec:authorize="hasRole('TEACHER')">Lisää suoritusmerkinnät</td>
+            <td sec:authorize="hasRole('STUDENT')">Oppilaan lomake</td>
+            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Poista oppitunti</td>
         </tr>
         <tr th:each="l : ${lessons}">
             <td th:text="${l.lessonDay}"></td>
             <td th:text="${l.teachingGroup.className}"></td>
             <td th:text="${l.sport.name}"></td>
             <td th:text="${l.lessonDescription}"></td>
-            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')"><a th:href="@{/editlessonform/{id}(id=${l.id})}"><i class="fas fa-pencil-alt"></i></a></td>
-            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')"><a th:href="@{/deletelesson/{id}(id=${l.id})}">Delete</a></td>
+            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')"><a th:href="@{/editlessonform/{id}(id=${l.id})}" style="color: #486B98;"><i class="fas fa-pencil-alt"></i></a></td>
             <!--  // Jos oppitunti poisteaan suoritukset katoaa-->
-            <th sec:authorize="hasRole('TEACHER')">
+            <td sec:authorize="hasRole('TEACHER')">
                 <span th:if="${performanceCountByLesson[l.id] > 0}">
-                    <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}">Muokkaa</a>
+                    <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}" style="color: green">Muokkaa</a>
                 </span>
                 <span th:if="${performanceCountByLesson[l.id] == 0}">
-                    <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}">Lisää</a>
+                    <a th:href="@{/teacherperformanceform/{id}(id=${l.id})}" style="color: orange;">Lisää</a>
                 </span>
             </td>
-            <th sec:authorize="hasRole('STUDENT')">
+            <td sec:authorize="hasRole('STUDENT')">
                 <span th:if="${performanceCountByLesson[l.id] > 0}">
-                    <a th:href="@{/studentaddsperformance/{id}(id=${l.id})}">Muokkaa</a>
+                    <a th:href="@{/studentaddsperformance/{id}(id=${l.id})}" style="color: green;">Muokkaa</a>
                 </span>
                 <span th:if="${performanceCountByLesson[l.id] == 0}">
-                    <a th:href="@{/studentaddsperformance/{id}(id=${l.id})}">Lisää</a>
+                    <a th:href="@{/studentaddsperformance/{id}(id=${l.id})}" style="color: orange;">Lisää</a>
                 </span>
             </td>
+            <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')"><a th:href="@{/deletelesson/{id}(id=${l.id})}" style="color: red;"><i class="fas fa-trash"></i></a></td>
 
         </tr>
     </table>
-    <div sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">
-    <a href="/lessonform" class="btn btn-success" >Lisää oppitunti</a>
+    <div sec:authorize="hasAnyRole('TEACHER', 'ADMIN')" style="margin-top: 30px;">
+    <a href="/lessonform" class="btn" style="background-color: #46576E; color: white;" >Lisää oppitunti</a>
+    </div>
     </div>
 
 </body>

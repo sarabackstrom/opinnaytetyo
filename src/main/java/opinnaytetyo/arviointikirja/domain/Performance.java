@@ -22,12 +22,12 @@ public class Performance {
     @Column(name = "liikuntataidot")
     @Min(4)
     @Max(10)
-    private int skills;
+    private Integer skills;
 
     @Column(name = "tyoskentely")
    @Min(4)
     @Max(10)
-    private int effort;
+    private Integer effort;
 
     @Column(name = "kuvaus")
     private String shortDescription;
@@ -87,19 +87,19 @@ public class Performance {
         this.id = id;
     }
 
-    public int getSkills() {
+    public Integer getSkills() {
         return skills;
     }
 
-    public void setSkills(int skills) {
+    public void setSkills(Integer skills) {
         this.skills = skills;
     }
 
-    public int getEffort() {
+    public Integer getEffort() {
         return effort;
     }
 
-    public void setEffort(int effort) {
+    public void setEffort(Integer effort) {
         this.effort = effort;
     }
 

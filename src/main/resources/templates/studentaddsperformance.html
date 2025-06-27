@@ -9,33 +9,38 @@
 
 <body>
 
-<!-- Navigaatiopalkki alkaa -->
- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Arviointikirja</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
-				<!-- Linkit navigointipalkkiin -->
-				<li class="nav-item">
-					<a class="nav-link" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/teachinggroups" sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat suoritukset</a>
-				</li>
-				<li class="nav-item">
-					<form th:action="@{/logout}" method="post" class="nav-link p-0">
-						<input type="submit" value="Kirjaudu ulos" class="btn btn-link text-white"/>
-					</form>
-				</li>
-			</ul>
-		</div>
- </nav>
-<!-- Navigaatiopalkki loppuu-->
+  <!-- Navigaatiopalkki alkaa -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #002F6C;">
+        <a class="navbar-brand" href="/lessonlist">Arviointikirja</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <!-- Linkit navigointipalkkiin -->
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/teachinggroups"
+                        sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat
+                        suoritukset</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#"
+                        onclick="document.getElementById('logoutForm').submit();">Kirjaudu ulos</a>
+                    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Navigaatiopalkki loppuu-->
+
+<div class="container mt-4">
 
     <h1>Lisää suoritus</h1>
     <p>Laji: <span th:text="${lesson.sport.name}"></span></p>
@@ -50,31 +55,31 @@
             <div class="form-group">
                 <label for="effort">Työskentely:</label>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="effort4" th:field="*{effort}" value="4">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="effort4" th:field="*{effort}" value="4">
                     <label class="form-check-label" for="effort4">4</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="effort5" th:field="*{effort}" value="5">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="effort5" th:field="*{effort}" value="5">
                     <label class="form-check-label" for="effort5">5</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="effort6" th:field="*{effort}" value="6">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="effort6" th:field="*{effort}" value="6">
                     <label class="form-check-label" for="effort6">6</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="effort7" th:field="*{effort}" value="7">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="effort7" th:field="*{effort}" value="7">
                     <label class="form-check-label" for="effort7">7</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="effort8" th:field="*{effort}" value="8">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="effort8" th:field="*{effort}" value="8">
                     <label class="form-check-label" for="effort8">8</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="effort9" th:field="*{effort}" value="9">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="effort9" th:field="*{effort}" value="9">
                     <label class="form-check-label" for="effort9">9</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="effort10" th:field="*{effort}" value="10">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="effort10" th:field="*{effort}" value="10">
                     <label class="form-check-label" for="effort10">10</label>
                 </div>
             </div>
@@ -82,31 +87,31 @@
             <div class="form-group">
                 <label for="skills">Taidot:</label>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="skills4" th:field="*{skills}" value="4">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="skills4" th:field="*{skills}" value="4">
                     <label class="form-check-label" for="skills4">4</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="skills5" th:field="*{skills}" value="5">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="skills5" th:field="*{skills}" value="5">
                     <label class="form-check-label" for="skills5">5</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="skills6" th:field="*{skills}" value="6">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="skills6" th:field="*{skills}" value="6">
                     <label class="form-check-label" for="skills6">6</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="skills7" th:field="*{skills}" value="7">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="skills7" th:field="*{skills}" value="7">
                     <label class="form-check-label" for="skills7">7</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="skills8" th:field="*{skills}" value="8">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="skills8" th:field="*{skills}" value="8">
                     <label class="form-check-label" for="skills8">8</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="skills9" th:field="*{skills}" value="9">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="skills9" th:field="*{skills}" value="9">
                     <label class="form-check-label" for="skills9">9</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" id="skills10" th:field="*{skills}" value="10">
+                    <input class="form-check-input" style="accent-color: #46576E;" type="radio" id="skills10" th:field="*{skills}" value="10">
                     <label class="form-check-label" for="skills10">10</label>
                 </div>
             </div>
@@ -118,32 +123,32 @@
 
             <div class="form-group">
                 <label for="absence">En ollut tunnilla</label>
-                <input type="checkbox" id="absence" th:field="*{absence}" />
+                <input type="checkbox" style="accent-color: #46576E;" id="absence" th:field="*{absence}" />
             </div>
 
             <div class="form-group">
                 <label for="injured">Olin loukkaantuneena tai kipeänä</label>
-                <input type="checkbox" id="injured" th:field="*{injured}" />
+                <input type="checkbox" style="accent-color: #46576E;" id="injured" th:field="*{injured}" />
             </div>
 
             <div class="form-group">
                 <label for="participation">En osallistunut</label>
-                <input type="checkbox" id="participation" th:field="*{participation}" />
+                <input type="checkbox" style="accent-color: #46576E;" id="participation" th:field="*{participation}" />
             </div>
 
             <div class="form-group">
                 <label for="sportsEquipment">Liikuntavarusteet puuttui</label>
-                <input type="checkbox" id="sportsEquipment" th:field="*{sportsEquipment}" />
+                <input type="checkbox" style="accent-color: #46576E;" id="sportsEquipment" th:field="*{sportsEquipment}" />
             </div>
 
-            <button type="submit" id="submitButton" class="btn btn-primary">Tallenna</button>
+            <button type="submit" id="submitButton" class="btn" style="background-color: #46576E; color: white;">Tallenna</button>
              <button type="button" onclick="window.location.href='/lessonlist'" class="btn btn-secondary" style="margin-left: 20px;">Peruuta (tietoja ei tallenneta)</button>
             
     </div>
 
     </form>
     </div>
-
+</div>
 </body>
 
 </html>

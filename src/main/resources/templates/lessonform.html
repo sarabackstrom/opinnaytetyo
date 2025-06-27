@@ -10,9 +10,9 @@
 
 <body>
 
-    <!-- Navigaatiopalkki alkaa -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Arviointikirja</a>
+  <!-- Navigaatiopalkki alkaa -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #002F6C;">
+        <a class="navbar-brand" href="/lessonlist">Arviointikirja</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -21,26 +21,28 @@
             <ul class="navbar-nav">
                 <!-- Linkit navigointipalkkiin -->
                 <li class="nav-item">
-                    <a class="nav-link" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
+                    <a class="nav-link text-white" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/teachinggroups"
+                    <a class="nav-link text-white" href="/teachinggroups"
                         sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat suoritukset</a>
+                    <a class="nav-link text-white" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat
+                        suoritukset</a>
                 </li>
                 <li class="nav-item">
-                    <form th:action="@{/logout}" method="post" class="nav-link p-0">
-                        <input type="submit" value="Kirjaudu ulos" class="btn btn-link text-white" />
-                    </form>
+                    <a class="nav-link text-white" href="#"
+                        onclick="document.getElementById('logoutForm').submit();">Kirjaudu ulos</a>
+                    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
                 </li>
             </ul>
         </div>
     </nav>
     <!-- Navigaatiopalkki loppuu-->
-
-    <h1>Lisää oppitunti</h1>
+     
+<div class="container mt-4">
+    <h1 style="margin-bottom: 30px;">Lisää oppitunti</h1>
 
     <!--- Valitse päivämäärä -->
     <div class="form-group">
@@ -84,12 +86,14 @@
                 </div>
             </div>
 
-
+<div style="margin-top: 30px;">
             <button type="submit" class="btn btn-primary">Tallenna</button>
                 <button type="button" onclick="window.location.href='/lessonlist'" class="btn btn-secondary"
                     style="margin-left: 20px;">Peruuta (tietoja ei tallenneta)</button>
+        </div>
 
         </form>
+    </div>
     </div>
 </body>
 

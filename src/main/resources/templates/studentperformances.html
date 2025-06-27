@@ -114,49 +114,54 @@
 
 <body>
 
-    <!-- Navigaatiopalkki alkaa -->
- <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Arviointikirja</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarNav">
-			<ul class="navbar-nav">
-				<!-- Linkit navigointipalkkiin -->
-				<li class="nav-item">
-					<a class="nav-link" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/teachinggroups" sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat suoritukset</a>
-				</li>
-				<li class="nav-item">
-					<form th:action="@{/logout}" method="post" class="nav-link p-0">
-						<input type="submit" value="Kirjaudu ulos" class="btn btn-link text-white"/>
-					</form>
-				</li>
-			</ul>
-		</div>
- </nav>
-<!-- Navigaatiopalkki loppuu-->
+  <!-- Navigaatiopalkki alkaa -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #002F6C;">
+        <a class="navbar-brand" href="/lessonlist">Arviointikirja</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <!-- Linkit navigointipalkkiin -->
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/lessonlist">Oppitunnit ja suoritusmerkintöjen lisääminen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/teachinggroups"
+                        sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">Opetusryhmät ja oppilaat</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="/myperformances" sec:authorize="hasRole('STUDENT')">Omat
+                        suoritukset</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#"
+                        onclick="document.getElementById('logoutForm').submit();">Kirjaudu ulos</a>
+                    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- Navigaatiopalkki loppuu-->
 
-    <h1>Suoritusmerkinnät <span th:text="${student.firstName + ' ' + student.lastName}"></span></h1>
+<div class="container mt-4">
+
+    <h1 style="margin-bottom: 30px;">Suoritusmerkinnät <span th:text="${student.firstName + ' ' + student.lastName}"></span></h1>
 
     <div sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">
-        <p>Opettajan arvioinnit</p>
+        <h3>Opettajan arvioinnit</h3>
         <p>Arvioituja oppitunteja: <span th:text="${lessonsT}"></span></p>
 
         <table class="table table-hover">
-            <tr>
-                <th>KA työskentely</th>
-                <th>KA osaaminen</th>
-                <th>KA 50% työskentely ja 50% osaaminen</th>
-                <th>poissaolot</th>
-                <th>ei varusteita</th>
-                <th>ei osallistu</th>
-                <th>loukkaantuneena</th>
+            <tr style="background-color: #486B98; color: white;">
+                <td>KA työskentely</td>
+                <td>KA osaaminen</td>
+                <td>KA 50% työskentely ja 50% osaaminen</td>
+                <td>poissaolot</td>
+                <td>ei varusteita</td>
+                <td>ei osallistu</td>
+                <td>loukkaantuneena</td>
             </tr>
             <tr>
                 <td th:text="${#numbers.formatDecimal(averageEffortT, 1, 2)}"></td>
@@ -170,14 +175,14 @@
         </table>
     </div>
 
-    <p>Oppilaan arvioinnit</p>
+    <h3>Oppilaan arvioinnit</h3>
     <p>Arvioituja oppitunteja: <span th:text="${lessonsS}"></span></p>
 
-    <table class="table table-hover">
-        <tr>
-            <th>KA työskentely</th>
-            <th>KA osaaminen</th>
-            <th>KA 50% työskentely ja 50% osaaminen</th>
+    <table class="table table-hover" style="margin-bottom: 30px;">
+        <tr style="background-color: #486B98; color: white;">
+            <td>KA työskentely</td>
+            <td>KA osaaminen</td>
+            <td>KA 50% työskentely ja 50% osaaminen</td>
         </tr>
         <tr>
             <td th:text="${#numbers.formatDecimal(averageEffortS, 1, 2)}"></td>
@@ -186,18 +191,18 @@
         </tr>
     </table>
 
-    <h3>Tavoitekohtaiset keskiarvot</h3>
+    <h3 >Tavoitekohtaiset keskiarvot</h3>
     <table 
         id="sortableTable" 
         class="table" 
         data-toggle="table"
     >
         <thead>
-            <tr>
-                <th data-sortable="true">Tavoite</th>
-                <th data-sortable="true">Kategoria</th>
-                <th sec:authorize="hasAnyRole('TEACHER', 'ADMIN')" data-sortable="true">Opettajan arvio</th>
-                <th data-sortable="true">Oppilaan itsearvio</th>
+            <tr style="background-color: #46576E; color: white;">
+                <td data-sortable="true">Tavoite</td>
+                <td data-sortable="true">Kategoria</td>
+                <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')" data-sortable="true">Opettajan arvio</td>
+                <td data-sortable="true">Oppilaan itsearvio</td>
             </tr>
         </thead>
         <tbody>
@@ -211,20 +216,20 @@
     </table>
 
     <div sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">
-    <h3>Suoritusmerkinnät</h3>
+    <h3 style="margin-top: 30px;">Suoritusmerkinnät</h3>
     <table 
         id="sortableTable" 
         class="table" 
         data-toggle="table"
     >
         <thead>
-            <tr>
-                <th data-sortable="true">Päivämäärä</th>
-                <th data-sortable="true">Laji</th>
-                <th data-sortable="true">Osaaminen</th>
-                <th data-sortable="true">Työskentely</th>
-                <th data-sortable="true">Kommentit</th>
-                <th data-sortable="true">Lisääjä</th>
+            <tr style="background-color: #46576E; color: white;">
+                <td data-sortable="true">Päivämäärä</td>
+                <td data-sortable="true">Laji</td>
+                <td data-sortable="true">Osaaminen</td>
+                <td data-sortable="true">Työskentely</td>
+                <td data-sortable="true">Kommentit</td>
+                <td data-sortable="true">Lisääjä</td>
             </tr>
         </thead>
         <tbody>
@@ -241,20 +246,20 @@
 
     </div>
     <div sec:authorize="hasRole('STUDENT')">
-    <h3>Suoritusmerkinnät</h3>
+    <h3 style="margin-top: 30px;">Suoritusmerkinnät</h3>
     <table 
         id="sortableTable" 
         class="table" 
         data-toggle="table"
     >
         <thead>
-            <tr>
-                <th data-sortable="true">Päivämäärä</th>
-                <th data-sortable="true">Laji</th>
-                <th data-sortable="true">Osaaminen</th>
-                <th data-sortable="true">Työskentely</th>
-                <th data-sortable="true">Kommentit</th>
-                <th data-sortable="true">Lisääjä</th>
+            <tr style="background-color: #46576E; color: white;">
+                <td data-sortable="true">Päivämäärä</td>
+                <td data-sortable="true">Laji</td>
+                <td data-sortable="true">Osaaminen</td>
+                <td data-sortable="true">Työskentely</td>
+                <td data-sortable="true">Kommentit</td>
+                <td data-sortable="true">Lisääjä</td>
             </tr>
         </thead>
         <tbody>
@@ -268,6 +273,7 @@
             </tr>
         </tbody>
     </table>
+    </div>
     </div>
 </body>
 </html>
