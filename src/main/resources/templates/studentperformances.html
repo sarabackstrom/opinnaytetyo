@@ -155,13 +155,13 @@
 
         <table class="table table-hover">
             <tr style="background-color: #486B98; color: white;">
-                <td>KA työskentely</td>
-                <td>KA osaaminen</td>
-                <td>KA 50% työskentely ja 50% osaaminen</td>
-                <td>poissaolot</td>
-                <td>ei varusteita</td>
-                <td>ei osallistu</td>
-                <td>loukkaantuneena</td>
+                <th>KA työskentely</th>
+                <th>KA osaaminen</th>
+                <th>KA 50% työskentely ja 50% osaaminen</th>
+                <th>poissaolot</th>
+                <th>ei varusteita</th>
+                <th>ei osallistu</th>
+                <th>loukkaantuneena</th>
             </tr>
             <tr>
                 <td th:text="${#numbers.formatDecimal(averageEffortT, 1, 2)}"></td>
@@ -180,9 +180,9 @@
 
     <table class="table table-hover" style="margin-bottom: 30px;">
         <tr style="background-color: #486B98; color: white;">
-            <td>KA työskentely</td>
-            <td>KA osaaminen</td>
-            <td>KA 50% työskentely ja 50% osaaminen</td>
+            <th>KA työskentely</th>
+            <th>KA osaaminen</th>
+            <th>KA 50% työskentely ja 50% osaaminen</th>
         </tr>
         <tr>
             <td th:text="${#numbers.formatDecimal(averageEffortS, 1, 2)}"></td>
@@ -199,10 +199,10 @@
     >
         <thead>
             <tr style="background-color: #46576E; color: white;">
-                <td data-sortable="true">Tavoite</td>
-                <td data-sortable="true">Kategoria</td>
-                <td sec:authorize="hasAnyRole('TEACHER', 'ADMIN')" data-sortable="true">Opettajan arvio</td>
-                <td data-sortable="true">Oppilaan itsearvio</td>
+                <th data-sortable="true">Tavoite</th>
+                <th data-sortable="true">Kategoria</th>
+                <th sec:authorize="hasAnyRole('TEACHER', 'ADMIN')" data-sortable="true">Opettajan arvio</th>
+                <th data-sortable="true">Oppilaan itsearvio</th>
             </tr>
         </thead>
         <tbody>
@@ -218,18 +218,18 @@
     <div sec:authorize="hasAnyRole('TEACHER', 'ADMIN')">
     <h3 style="margin-top: 30px;">Suoritusmerkinnät</h3>
     <table 
-        id="sortableTable" 
+        id="sortableTable1" 
         class="table" 
         data-toggle="table"
     >
         <thead>
             <tr style="background-color: #46576E; color: white;">
-                <td data-sortable="true">Päivämäärä</td>
-                <td data-sortable="true">Laji</td>
-                <td data-sortable="true">Osaaminen</td>
-                <td data-sortable="true">Työskentely</td>
-                <td data-sortable="true">Kommentit</td>
-                <td data-sortable="true">Lisääjä</td>
+                <th data-sortable="true">Päivämäärä</th>
+                <th data-sortable="true">Laji</th>
+                <th data-sortable="true">Osaaminen</th>
+                <th data-sortable="true">Työskentely</th>
+                <th data-sortable="true">Kommentit</th>
+                <th data-sortable="true">Lisääjä</th>
             </tr>
         </thead>
         <tbody>
@@ -248,18 +248,18 @@
     <div sec:authorize="hasRole('STUDENT')">
     <h3 style="margin-top: 30px;">Suoritusmerkinnät</h3>
     <table 
-        id="sortableTable" 
+        id="sortableTable2" 
         class="table" 
         data-toggle="table"
     >
         <thead>
             <tr style="background-color: #46576E; color: white;">
-                <td data-sortable="true">Päivämäärä</td>
-                <td data-sortable="true">Laji</td>
-                <td data-sortable="true">Osaaminen</td>
-                <td data-sortable="true">Työskentely</td>
-                <td data-sortable="true">Kommentit</td>
-                <td data-sortable="true">Lisääjä</td>
+                <th data-sortable="true">Päivämäärä</th>
+                <th data-sortable="true">Laji</th>
+                <th data-sortable="true">Osaaminen</th>
+                <th data-sortable="true">Työskentely</th>
+                <th data-sortable="true">Kommentit</th>
+                <th data-sortable="true">Lisääjä</th>
             </tr>
         </thead>
         <tbody>

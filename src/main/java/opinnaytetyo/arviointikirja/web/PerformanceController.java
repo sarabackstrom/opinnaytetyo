@@ -26,13 +26,15 @@ import opinnaytetyo.arviointikirja.domain.*;
 @Controller
 public class PerformanceController {
 
-    private final LessonController lessonController;
-
-    private final EducationalGoalRepository educationalGoalRepository;
-
-    private final ArviointikirjaApplication arviointikirjaApplication;
-
-    private final TeachingGroupRepository teachingGroupRepository;
+    /*
+     * private final LessonController lessonController;
+     * 
+     * private final EducationalGoalRepository educationalGoalRepository;
+     * 
+     * private final ArviointikirjaApplication arviointikirjaApplication;
+     * 
+     * private final TeachingGroupRepository teachingGroupRepository;
+     */
 
     private final LessonRepository lRepository;
     private final PerformanceRepository pRepository;
@@ -48,15 +50,18 @@ public class PerformanceController {
         this.pRepository = pRepository;
         this.stRepository = stRepository;
         this.uRepository = uRepository;
-        this.teachingGroupRepository = teachingGroupRepository;
-        this.arviointikirjaApplication = arviointikirjaApplication;
-        this.educationalGoalRepository = educationalGoalRepository;
-        this.lessonController = lessonController;
+        /*
+         * this.teachingGroupRepository = teachingGroupRepository;
+         * this.arviointikirjaApplication = arviointikirjaApplication;
+         * this.educationalGoalRepository = educationalGoalRepository;
+         * this.lessonController = lessonController;
+         */
     }
 
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     @GetMapping("/teacherperformanceform/{id}")
     public String showPerformanceForm(@PathVariable("id") Long id, Model model) {
+        // Etsitään valittu oppitunti ja siihen liittyvät oppilaat
         Optional<Lesson> lesson = lRepository.findById(id);
         if (lesson.isPresent()) {
 
@@ -67,11 +72,16 @@ public class PerformanceController {
 
             Lesson selectedLesson = lesson.get();
 
+            // Etsitään sen luokan oppilaat, joille oppitunti on pidetty
             List<Student> students = stRepository.findByTeachingGroup(selectedLesson.getTeachingGroup());
 
+            // Luodaan performancesDto-olio, johon voi tallentaa listan suorituksia.
             PerformancesDto performancesDto = new PerformancesDto();
 
+            // Jokaiseen suoritukseen linkitetään luokan oppilas, oppitunti sekä kirjautunut
+            // käyttäjät (=opettaja) suorituksen lisääjäksi
             for (Student student : students) {
+                // Tarkistetaanko löytyykö oppitunnille jo opettajan lisäämät suoritusmerkinnät
                 Optional<Performance> existingPerformance = pRepository.findByStudentAndLessonAndUser(student,
                         selectedLesson, currentUser);
                 Performance performance;
@@ -112,6 +122,7 @@ public class PerformanceController {
             // Haetaan student-olio käyttäjän perusteella
             Student student = stRepository.findByUsername(user);
 
+            // Tarkistetaan löytyykö oppilaan lisäämä suoritus
             Optional<Performance> existingPerformance = pRepository.findByStudentAndLessonAndUser(student,
                     selectedLesson, currentUser);
             Performance performance;
@@ -183,6 +194,7 @@ public class PerformanceController {
 
         performance.setUser(currentUser);
 
+        // Tarkisteaan löytyykö jo oppilaan lisäämä suoritus, jota voidaan päivittää
         Optional<Performance> existing = pRepository.findByStudentAndLessonAndUser(
                 performance.getStudent(), performance.getLesson(), currentUser);
 
@@ -205,13 +217,18 @@ public class PerformanceController {
         return "redirect:/lessonlist";
     }
 
-    /*@PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
-    @PostMapping("/studentsaveperformance")
-    public String saveStudentPerformance(@ModelAttribute Performance performance) {
-        pRepository.save(performance);
-        return "redirect:/lessonlist";
-    }*/
+    /*
+     * @PreAuthorize("hasAnyRole('STUDENT', 'ADMIN')")
+     * 
+     * @PostMapping("/studentsaveperformance")
+     * public String saveStudentPerformance(@ModelAttribute Performance performance)
+     * {
+     * pRepository.save(performance);
+     * return "redirect:/lessonlist";
+     * }
+     */
 
+    // Kirjautuneen oppilaan tunnistaminen ja ohjaaminen omalle suoritussivulle
     @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("/myperformances")
     public String redirectToOwnPerformances() {
@@ -277,11 +294,29 @@ public class PerformanceController {
                     .average()
                     .orElse(0.0);
             // työskentely ja taidot yhdistetty keskiarvo painoarvolla 50% työskentely ja
-            // 50% taidot ope
-            double averageEffortAndSkillsT = (averageEffortT + averageSkillsT) / 2;
+            // 50% taidot ope, mikäli toinen arvoista nolla, sitä ei huomioida keskiarvoossa
+            double averageEffortAndSkillsT;
+            if (averageEffortT > 0 && averageSkillsT > 0) {
+                averageEffortAndSkillsT = (averageEffortT * 0.5) + (averageSkillsT * 0.5);
+            } else if (averageEffortT > 0) {
+                averageEffortAndSkillsT = averageEffortT;
+            } else if (averageSkillsT > 0) {
+                averageEffortAndSkillsT = averageSkillsT;
+            } else {
+                averageEffortAndSkillsT = 0; // molemmat nollia
+            }
             // työskentely ja taidot yhdistetty keskiarvo painoarvolla 50% työskentely ja
             // 50% taidot oppilas
-            double averageEffortAndSkillsS = (averageEffortS + averageSkillsS) / 2;
+            double averageEffortAndSkillsS;
+            if (averageEffortS > 0 && averageSkillsS > 0) {
+                averageEffortAndSkillsS = (averageEffortS * 0.5) + (averageSkillsS * 0.5);
+            } else if (averageEffortS > 0) {
+                averageEffortAndSkillsS = averageEffortS;
+            } else if (averageSkillsS > 0) {
+                averageEffortAndSkillsS = averageSkillsS;
+            } else {
+                averageEffortAndSkillsS = 0; // molemmat nollia
+            }
             // poissaolot yhteensä
             long absenceCount = teacherAddedPerformances.stream()
                     .filter(Performance::isAbsence)
@@ -315,31 +350,44 @@ public class PerformanceController {
             model.addAttribute("allPerformances", allPerformances);
             model.addAttribute("studentAddedPerformances", studentAddedPerformances);
 
-            // opetussuunnitelman tavoitteet -tekoäly
+            // Opetussuunnitelman tavoitteet, Tekoälyä käytetty apuna loogikan
+            // rakentamisessa
+
+            // Haetaan kaikki oppitunnit, joihin opettaja on lisännyt suoritusmerkintöjä
             List<Lesson> studentLessons = teacherAddedPerformances.stream()
                     .map(Performance::getLesson)
                     .distinct()
                     .collect(Collectors.toList());
 
+            // Haetaan kaikki oppituntien tavoitteet, jotka on liitetty oppitunteihin
             List<LessonGoal> allLessonGoals = new ArrayList<>();
             for (Lesson lesson : studentLessons) {
                 allLessonGoals.addAll(lesson.getLessonGoals());
             }
 
+            // Luodaan "Map", joka yhdistää jokaisen opetussuunnitelman tavoitteen siihen
+            // liittyviin suorituksiin
             Map<EducationalGoal, List<Integer>> goalToScores = new HashMap<>();
 
+            // Käydään kaikki oppituntitavoitteet läpi
             for (LessonGoal lg : allLessonGoals) {
                 EducationalGoal eg = lg.getEducationalGoal();
                 String category = eg.getCategory();
 
+                // Katsotaan, onko opettajan suoritusmerkintä tehty kyseiseen oppituntiin.
                 for (Performance p : teacherAddedPerformances) {
                     if (p.getLesson().equals(lg.getLesson())) {
+                        // Selvitetään mikä arvo suoritusmerkinnästä haetaan:
+                        // Jos tavoitteen kategoria on effort, käytetään effort-arvoa.
+                        // Jos skills, käytetään skills-arvoa.
                         Integer value = null;
                         if ("effort".equalsIgnoreCase(category)) {
                             value = p.getEffort();
                         } else if ("skills".equalsIgnoreCase(category)) {
                             value = p.getSkills();
                         }
+                        // Lisätään suorituksen arvo oikeaan tavoitteeseen liittyvään listaan.
+                        // Jos tavoitteelle ei ole vielä listaa, luodaan uusi lista ensin.
                         if (value != null && value > 0) {
                             goalToScores.computeIfAbsent(eg, k -> new ArrayList<>()).add(value);
                         }
@@ -347,6 +395,7 @@ public class PerformanceController {
                 }
             }
 
+            // Jokaiselle tavoitteelle lasketaan suoritusnumeroiden keskiarvo.
             Map<EducationalGoal, Double> goalAverages = goalToScores.entrySet().stream()
                     .collect(Collectors.toMap(
                             Map.Entry::getKey,
@@ -354,7 +403,8 @@ public class PerformanceController {
 
             // model.addAttribute("goalAverages", goalAverages);
 
-            // Oppilaan painotetut keskiarvot ed-goal mukaan, tekoälyapuna
+            // Oppilaan painotetut keskiarvot ed-goal mukaan, tehty opettajan mallia
+            // mukaillen
             List<Lesson> studentLessonsSelf = studentAddedPerformances.stream()
                     .map(Performance::getLesson)
                     .distinct()
@@ -398,7 +448,8 @@ public class PerformanceController {
             allGoals.addAll(goalAverages.keySet());
             allGoals.addAll(studentGoalAverages.keySet());
 
-            // Rakenna lista tietorakenteesta jossa on molemmat arvot rinnakkain
+            // Jokaisesta tavoitteesta tehdään oma rivi, jossa on tavoitteen nimi,
+            // kategoria, opettajan keskiarvo ja oppilaan keskiarvo
             List<Map<String, Object>> combinedGoalAverages = new ArrayList<>();
 
             for (EducationalGoal goal : allGoals) {

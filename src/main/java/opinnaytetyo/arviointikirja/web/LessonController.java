@@ -12,6 +12,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,8 @@ import opinnaytetyo.arviointikirja.domain.UserRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class LessonController {
@@ -80,7 +83,8 @@ public class LessonController {
         if (currentUser instanceof Teacher) {
             Teacher teacher = (Teacher) currentUser;
 
-            // Hae kaikki tunnit, joiden ryhmän opettaja on kirjautunut opettaja
+            // Hae kaikki tunnit, joiden ryhmän opettaja on kirjautunut opettaja tai
+            // oppilaan oman opetusryhmän tunnit
             lRepository.findAll().forEach(lesson -> {
                 TeachingGroup group = lesson.getTeachingGroup();
                 if (group != null && group.getTeacher().equals(teacher)) {
@@ -104,7 +108,8 @@ public class LessonController {
         // Haetaan kaikki kirjautuneen käyttäjän lisäämät suoritukset
         List<Performance> userPerformances = pRepository.findByUser(currentUser);
 
-        // Map: Oppitunnin ID -> käyttäjän lisäämien suoritusten määrä
+        // Map: Oppitunnin ID -> käyttäjän lisäämien suoritusten määrä, käytetään
+        // siihen, näkyykö käyttäjälle muokkaa vai lisää suoritus lessonlist-näkymässä
         Map<Long, Integer> performanceCountByLesson = new HashMap<>();
         for (Lesson lesson : filteredLessons) {
             performanceCountByLesson.put(lesson.getId(), 0);
@@ -123,8 +128,8 @@ public class LessonController {
         model.addAttribute("performanceCountByLesson", performanceCountByLesson);
         model.addAttribute("user", currentUser);
 
-        System.out.println("Käyttäjän rooli: ROLE_" + currentUser.getRole());
-        System.out.println("Authorities: " + AuthorityUtils.createAuthorityList("ROLE_" + currentUser.getRole()));
+        //System.out.println("Käyttäjän rooli: ROLE_" + currentUser.getRole());
+        //System.out.println("Authorities: " + AuthorityUtils.createAuthorityList("ROLE_" + currentUser.getRole()));
         return "lessonlist";
     }
 
@@ -149,7 +154,7 @@ public class LessonController {
         model.addAttribute("selectedGoals", new ArrayList<Long>());
         model.addAttribute("teachingroups", teachingGroups);
 
-        // Kerrotaan mihin näkymään pyyntö ohjataan 
+        // Kerrotaan, mihin näkymään pyyntö ohjataan
         return "lessonform";
     }
 
@@ -179,8 +184,26 @@ public class LessonController {
 
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     @PostMapping("/savelesson")
-    public String saveLesson(@ModelAttribute Lesson lesson,
-            @RequestParam(value = "selectedGoals", required = false) List<Long> selectedGoalIds) {
+    public String saveLesson(
+            @Valid @ModelAttribute("lesson") Lesson lesson,
+            BindingResult bindingResult,
+            @RequestParam(value = "selectedGoals", required = false) List<Long> selectedGoalIds,
+            Model model) {
+
+        if (bindingResult.hasErrors()) {
+            // Hae kirjautunut käyttäjä uudelleen
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
+
+            Teacher currentTeacher = tRepository.findByUsername(username);
+            List<TeachingGroup> teachingGroups = tGroupRepository.findByTeacher(currentTeacher);
+
+            model.addAttribute("goals", eGoalRepository.findAll());
+            model.addAttribute("teachingroups", teachingGroups);
+            model.addAttribute("sports", sRepository.findAll());
+            model.addAttribute("selectedGoals", selectedGoalIds);
+            return "lessonform";
+        }
 
         lRepository.save(lesson);
 
@@ -192,11 +215,38 @@ public class LessonController {
                 lg.setLesson(lesson);
                 lg.setEducationalGoal(goal);
 
-                lGoalRepository.save(lg); // Tallennetaan jokainen yhdistelmä
+                lGoalRepository.save(lg);
             }
         }
-        return "redirect:lessonlist";
+
+        return "redirect:/lessonlist";
     }
+
+    /*
+     * @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
+     * 
+     * @PostMapping("/savelesson")
+     * public String saveLesson(@ModelAttribute Lesson lesson,
+     * 
+     * @RequestParam(value = "selectedGoals", required = false) List<Long>
+     * selectedGoalIds) {
+     * 
+     * lRepository.save(lesson);
+     * 
+     * if (selectedGoalIds != null) {
+     * for (Long goalId : selectedGoalIds) {
+     * EducationalGoal goal = eGoalRepository.findById(goalId).orElseThrow();
+     * 
+     * LessonGoal lg = new LessonGoal();
+     * lg.setLesson(lesson);
+     * lg.setEducationalGoal(goal);
+     * 
+     * lGoalRepository.save(lg); // Tallennetaan jokainen yhdistelmä
+     * }
+     * }
+     * return "redirect:lessonlist";
+     * }
+     */
 
     @PreAuthorize("hasAnyRole('TEACHER', 'ADMIN')")
     @PostMapping("/updatelesson")
@@ -205,7 +255,7 @@ public class LessonController {
 
         lRepository.save(lesson);
 
-        // Poistetaan vanhat tavoitteet ja lisää uudet
+        // Poistetaan vanhat tavoitteet ja lisätään uudet
         lGoalRepository.deleteByLesson(lesson);
 
         if (selectedGoalIds != null) {

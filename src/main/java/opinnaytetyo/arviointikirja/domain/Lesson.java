@@ -24,7 +24,7 @@ public class Lesson {
     private Long id;
 
     @Column(name="paivamaara", nullable = false)
-    //@NotEmpty(message = "Oppitunnilla pitää olla päivämäärä")
+    @NotNull(message = "Oppitunnilla pitää olla päivämäärä")
     private LocalDate lessonDay;
 
     @Column(name="kuvaus")
